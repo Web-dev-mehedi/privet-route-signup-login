@@ -1,7 +1,15 @@
-import React from "react";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import React, { createRef, useContext, useState } from "react";
+import { Link } from "react-router-dom";
+import { auth } from "../firebase.init";
+import { FirebaseContext } from "../context api/AuthProvider";
+
 
 const Resister = () => {
 
+  const {createUser} = useContext(FirebaseContext);
+
+  const [error, setError] =useState('')
 
 
 const handleSubmit = (e)=>{
@@ -9,16 +17,35 @@ e.preventDefault();
 const name = e.target.name.value;
 const email = e.target.email.value;
 const password = e.target.password.value;
-console.log(name,email,password)
+console.log(name,email,password);
+setError('')
+// call the firebase auth from context api
+ createUser(email,password)
+.then((result)=>{
+  console.log(result.user)
+    setError('sign up successfull')
+}).catch(error =>{
+  setError(error.message)
+})
 
 }
 
+
+const provider = new GoogleAuthProvider()
+const handleGoogleSignUp = ()=>{
+      signInWithPopup(auth,provider)
+      .then(result =>{
+          console.log(result.user)
+      }).catch(error=>{
+        console.log(error)
+      })
+}
 
   return (
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content flex-col lg:flex-row-reverse">
         <div className="text-center lg:text-left">
-          <h1 className="text-5xl font-bold">Resister now!</h1>
+          <h1 className="text-5xl font-bold">Register now!</h1>
           <p className="py-6">
             Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
             excepturi exercitationem quasi. In deleniti eaque aut repudiandae et
@@ -65,9 +92,18 @@ console.log(name,email,password)
             
             </div>
             <div className="form-control mt-6">
-              <button className="btn btn-primary">Resister</button>
+              <button className="btn btn-primary">Register</button>
             </div>
+            <p>Already have an account <strong> <Link to="/login">Login Now</Link> </strong> </p>
           </form>
+                <p>OR</p>
+             <div>
+                 <button onClick={handleGoogleSignUp} className="btn btn-secondary">Google signUp</button>
+             </div>
+
+           
+          <p className="bg-slate-500 py-2 text-green-200 px-8 capitalize"> {error}</p>
+          
         </div>
       </div>
     </div>
