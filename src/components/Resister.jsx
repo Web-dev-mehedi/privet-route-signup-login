@@ -1,15 +1,16 @@
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {  signInWithPopup } from "firebase/auth";
 import React, { createRef, useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase.init";
 import { FirebaseContext } from "../context api/AuthProvider";
 
 
 const Resister = () => {
 
-  const {createUser} = useContext(FirebaseContext);
+  const {createUser,signInWithGoogle} = useContext(FirebaseContext);
 
-  const [error, setError] =useState('')
+  const [error, setError] =useState('');
+  const navigate = useNavigate()
 
 
 const handleSubmit = (e)=>{
@@ -23,7 +24,9 @@ setError('')
  createUser(email,password)
 .then((result)=>{
   console.log(result.user)
-    setError('sign up successfull')
+    setError('sign up successfull');
+    e.target.reset();
+    navigate("/")
 }).catch(error =>{
   setError(error.message)
 })
@@ -31,11 +34,13 @@ setError('')
 }
 
 
-const provider = new GoogleAuthProvider()
+
 const handleGoogleSignUp = ()=>{
-      signInWithPopup(auth,provider)
+  // call from api
+     signInWithGoogle()
       .then(result =>{
-          console.log(result.user)
+          console.log(result.user);
+          navigate("/")
       }).catch(error=>{
         console.log(error)
       })

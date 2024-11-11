@@ -17,6 +17,12 @@ const Navbar = () => {
           <li>
               <NavLink to='/resister'>Resister</NavLink>
           </li>
+          {
+            user && <>
+               <li>  <NavLink to="orders">Orders</NavLink></li>
+               <li>  <NavLink to="profile">Profile</NavLink></li>
+            </>
+          }
     </>
 
 
@@ -69,7 +75,7 @@ const handleSignOut=()=>[
         {
           !user?<Link to="/login">Login</Link>:<>
               <a className="btn">{user?.email}</a>
-              <Link onClick={handleSignOut}>Sign Out</Link>
+              <Link to="/login" onClick={handleSignOut}>Sign Out</Link>
           </>
         }
       </div>

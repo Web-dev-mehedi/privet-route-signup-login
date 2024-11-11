@@ -4,6 +4,11 @@ import Home from "../components/Home";
 import Login from "../components/Login";
 import Resister from "../components/Resister";
 
+import PrivetRoutes from "../routes/privetRoutes";
+import Orders from "../components/Orders";
+import Profile from "../components/Profile";
+
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -21,6 +26,14 @@ import Resister from "../components/Resister";
             path: "/resister",
             element:<Resister/>
         },
+         {
+          path:"orders",
+          element: <PrivetRoutes><Orders></Orders> </PrivetRoutes>
+         },
+         {
+          path:"profile",
+          element: <PrivetRoutes> <Profile></Profile> </PrivetRoutes>
+         }
       ]
     },
   ]);

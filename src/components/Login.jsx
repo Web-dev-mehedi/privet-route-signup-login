@@ -1,30 +1,37 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
-import React, { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FirebaseContext } from "../context api/AuthProvider";
 
+import React, { useContext, useEffect, useState } from "react";
+
+import { FirebaseContext } from "../context api/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const {signInUser} = useContext(FirebaseContext)
+     
+   const {signInUser,user} = useContext(FirebaseContext);
+  console.log(user)
   
-       const[error,setError] = useState('')
-      const navigate = useNavigate()
-    const handleSinIn = (event)=>{
-        setError('')
-        event.preventDefault();
-        const email = event.target.email.value;
-        const password = event.target.password.value;
-        // 
-        signInUser(email,password)
-        .then(result=>{
-            console.log(result.user)
-            setError("login successfully")
-            setUser(result.user)
-        }).catch(error=>{
-            console.log(error);
-            setError(error.message)
-        })
-    }
+  const[error,setError] = useState('')
+  const navigate = useNavigate()
+const handleSignIn = (event)=>{
+    setError('')
+    event.preventDefault();
+    const email = event.target.email.value;
+    const password = event.target.password.value;
+    // call from api
+    signInUser(email,password)
+    .then(result=>{
+        console.log(result.user)
+        setError("login successfully");
+        navigate("/");
+        event.target.reset()
+    }).catch(error=>{
+        console.log(error);
+        setError(error.message);
+        navigate("/login")
+    })
+}
+
+
+
   return (
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content flex-col lg:flex-row-reverse">
@@ -37,7 +44,7 @@ const Login = () => {
           </p>
         </div>
         <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-          <form onSubmit={ handleSinIn} className="card-body">
+          <form onSubmit={handleSignIn} className="card-body">
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>
@@ -48,6 +55,7 @@ const Login = () => {
                 name="email"
                 className="input input-bordered"
                 required
+               
               />
             </div>
             <div className="form-control">
@@ -68,10 +76,10 @@ const Login = () => {
               </label>
             </div>
             <div className="form-control mt-6">
-              <Link to={navigate("/")} className="btn btn-primary">Login</Link>
+              <button  className="btn btn-primary">Login</button>
             </div>
           </form>
-          <p className="bg-slate-500 py-2 text-green-200 px-8 capitalize"> {error}</p>
+          <p className="bg-slate-500 py-2 text-green-200 px-8 capitalize">{error} </p>
         </div>
       </div>
     </div>
